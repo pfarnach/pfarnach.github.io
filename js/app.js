@@ -6,11 +6,26 @@
   var elapsedTime;
   var counter;
   var counterIncrementer;
+  var openInJira;
   var listContainer;
   var checkboxContainer;
   var submitBtn;
 
-  names = ['Eric', 'Tal', 'Nick L', 'Arcy', 'Keelan', 'Pat', 'Chris', 'Forest', 'Ken', 'Shawn', 'Nick DY', 'Randall', 'Tim'];
+  names = [
+    { label: 'Eric', linkName: 'ehartford' },
+    { label: 'Tal', linkName: 'tdanan' },
+    { label: 'Nic L', linkName: 'nlembck' },
+    { label: 'Arcy', linkName: 'adouglass' },
+    { label: 'Keelan', linkName: 'kholman' },
+    { label: 'Pat', linkName: 'pfarnach' },
+    { label: 'Chris', linkName: 'clarson' },
+    { label: 'Forest', linkName: 'ftoney' },
+    { label: 'Ken', linkName: '"kbrumer%40sosacorp.com"' },
+    { label: 'Shawn', linkName: '"sboles%40sosacorp.com"' },
+    { label: 'Nick DY', linkName: 'ndeyoung' },
+    { label: 'Randall', linkName: '"rsexton%40sosacorp.com"' },
+    { label: 'Tim', linkName: 'tcornell' }
+  ];
 
   submitBtn = document.getElementById('submit-list');
   checkboxContainer = document.getElementById('checkbox-container');
@@ -30,6 +45,8 @@
 
     elapsedTime = 0;
     counter = 20;
+
+    openInJira = document.getElementsByClassName('jira-checkbox')[0].checked;
   }
 
   // build HTML for checkboxes
@@ -41,10 +58,12 @@
       var lineBreak = document.createElement('br');
 
       checkbox.type = 'checkbox';
-      checkbox.value = name;
+      checkbox.value = name.label;
+      checkbox.setAttribute('data-link-name', name.linkName);
       checkbox.checked = true;
+      checkbox.className = 'name-checkboxes';
 
-      label.innerHTML = name;
+      label.innerHTML = name.label;
 
       checkboxContainer.appendChild(checkbox);
       checkboxContainer.appendChild(label);
@@ -59,7 +78,12 @@
     namesPresent =
       _(checkboxContainer.children)
         .filter(function(child) { return child.tagName ==='INPUT' && child.checked === true; })
-        .map(function(child) { return child.value; })
+        .map(function(child) {
+          return {
+            label: child.value,
+            linkName: child.dataset.linkName
+          };
+        })
         .shuffle()
         .value();
 
@@ -67,7 +91,9 @@
   }
 
   // build HTML for selector
-  function drawSelector(names) {
+  function drawSelector(filteredNames) {
+
+    var listItem;
 
     // make sure selector is empty
     while (listContainer.hasChildNodes()) {
@@ -75,9 +101,10 @@
     }
 
     // populate selector
-    _.each(names, function(name, index) {
-      var listItem = document.createElement('li');
-      listItem.innerHTML = name;
+    _.each(filteredNames, function(name) {
+      listItem = document.createElement('li');
+      listItem.innerHTML = name.label;
+      listItem.setAttribute('data-link-name', name.linkName);
       listContainer.appendChild(listItem);
     });
 
@@ -122,10 +149,16 @@
   }
 
   // adds special class to winner
-  function findWinner() {
+  function findWinner(i) {
+
+    i = i || 0;
+
     _.each(listContainer.children, function(child, index, listContainer) {
       if (child.className === 'selected') {
         child.className += ' winner';
+        if (openInJira) {
+          setTimeout(function() { window.open('https://sosacorp.atlassian.net/issues/?jql=assignee%20in%20(' + child.dataset.linkName + ')%20ORDER%20BY%20status%20ASC', '_blank') }, 1500);
+        }
       }
     });
   }

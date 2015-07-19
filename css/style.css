@@ -16,8 +16,20 @@ input[type='submit'] {
 /*
 / checkboxes
 */
-input[type='checkbox'] {
+.name-checkboxes {
 	margin: 5px 5px 0 60px;
+}
+
+.jira-checkbox-container {
+    padding: 5px;
+}
+
+.jira-checkbox-text {
+    margin-left:5px;
+}
+
+.jira-checkbox {
+    margin-left: 10px;
 }
 
 /*
