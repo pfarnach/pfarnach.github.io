@@ -157,7 +157,7 @@
       if (child.className === 'selected') {
         child.className += ' winner';
         if (openInJira) {
-          setTimeout(function() { window.open('https://sosacorp.atlassian.net/issues/?jql=assignee%20in%20(' + child.dataset.linkName + ')%20ORDER%20BY%20status%20ASC', '_blank') }, 1500);
+          setTimeout(function() { window.open('https://sosacorp.atlassian.net/issues/?filter=10900&jql=Sprint%20%3D%2033%20AND%20assignee%20%3D%20%22' + child.dataset.linkName + '%22%20ORDER%20BY%20status%20ASC%2C%20updated%20DESC%2C%20created%20ASC', '_blank') }, 1500);
         }
       }
     });
