@@ -24,8 +24,8 @@ input[type='submit'] {
     padding: 5px;
 }
 
-.jira-checkbox-text {
-    margin-left:5px;
+.jira-sprint {
+    width: 65px;
 }
 
 .jira-checkbox {
